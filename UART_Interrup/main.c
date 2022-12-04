@@ -96,8 +96,12 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
-  {
-	  HAL_UART_Receive_IT(&huart1, &veri, sizeof(veri));
+  {	
+	  //Sistem config ayarlarken baud vs. değerleri belirleyip Proteustaki terminali aynı değerlerle eşleştiriyoruz.
+	  HAL_UART_Receive_IT(&huart1, &veri, sizeof(veri));//Rx (almak) başlatıyoruz. Bizden hangi usart girişi istediğini, aldığımız veriyi nereye atacağımızı ve
+	  //aldığımız verinin boyutunu soruyor. sizeof metodu adından belli.
+	  //Bunu while içinde başlatmamımızın nedeni sürekli olarak veri girişi alabilmeyi istememiz
+	  //eğer main metod içinde tanımlasaydık (user code beggin/end 2 (8 satır yukarıda)) her main metot da bir veri alabilirdik. 208.satıra devam
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -204,14 +208,15 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) //özel Rx Callback fonkisyonunu tanımladık
 {
-    	if(huart->Instance==USART1){
+    	if(huart->Instance==USART1){ //timerda olduğu gibi eğer USART tetiklenirse çalışacak
 
-    		  if(veri=='y'){
+    		  if(veri=='y'){// eğer gelen veri 'y''ye eşit ise yakma işlemi
     			  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, 1);
-    			  message="\f 1 \n\r";
-    			  HAL_UART_Transmit(&huart1, (uint8_t*)message, sizeof(message), 10);
+    			  message="\f 1 \n\r"; //f n ve r nin anlamı sadece tek satır istememiz yoksa alt alta birçok satır veya yan yana bir sürü sayı olurdu
+    			  HAL_UART_Transmit(&huart1, (uint8_t*)message, sizeof(message), 10);//USART register bazında çalıştığından pointer dönüşümü yapıyoruz.
+			  //Terminale 1 üst satırda tanımladığımız değeri yazdırıyoruz
     		  }
 
     		  else if(veri=='s'){
