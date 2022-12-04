@@ -4,6 +4,6 @@
 
 
 <h3>s değeri girilince</h3>
-![s](https://user-images.githubusercontent.com/73295089/205502695-c406d013-dc2a-43d4-a4e8-62d7ad6edd27.png)
+<img src="https://user-images.githubusercontent.com/73295089/205502695-c406d013-dc2a-43d4-a4e8-62d7ad6edd27.png"></img>
 
 
